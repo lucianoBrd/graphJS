@@ -84,7 +84,7 @@ function createGraph() {
     svg.appendChild(gridX);
 
     /* Get the data JSON */
-    fetch('./data.json').then(function (response) {
+    fetch('./assets/data/data.json').then(function (response) {
         if (response.ok) {
             return response.json();
         } else {
