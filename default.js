@@ -3,8 +3,10 @@ sort = false;
 function createGraph() {
     var xMin = 90,
         xMax = 705,
+        xGap = xMax - xMin,
         yMin = 370,
-        yMax = 5;
+        yMax = 5,
+        yGap = yMax - yMin;
 
     /* Create SVG */
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -90,21 +92,21 @@ function createGraph() {
         }
     }).then(function (data) {
         var length = data.length;
-        var abs = Math.trunc(length / 5);
-        var ord = Math.trunc(length / 4);
 
         /* Sort data by population */
         data.sort(function (a, b) {
             return a.population - b.population;
         });
-        var populationMin = data[0].population;
-        var populationGap = data[length - 1].population - populationMin;
+        var populationMin = parseInt(data[0].population);
+        var populationGap = parseInt(data[length - 1].population - populationMin);
 
         /* Add ordinate texts */
         var ordPos = [373, 248, 131, 15];
         for (let i = 0; i < 4; i++) {
             var date = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            var text = document.createTextNode(data[i * ord].population);
+            var text = document.createTextNode(
+                populationMin + Math.round(((ordPos[i] - yMin) / yGap * populationGap))
+            );
             date.appendChild(text);
 
             date.setAttribute("x", xMin - 35);
@@ -122,14 +124,16 @@ function createGraph() {
             }
             
         });
-        var dateMin = data[0].year;
-        var dateGap = data[length - 1].year - dateMin;
+        var dateMin = parseInt(data[0].year);
+        var dateGap = parseInt(data[length - 1].year - dateMin);
 
         /* Add absciss texts */
         var absPos = [100, 246, 392, 538, 684];
         for (let i = 0; i < 5; i++) {
             var date = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            var text = document.createTextNode(data[i * abs].year);
+            var text = document.createTextNode(
+                dateMin + Math.round(((absPos[i] - xMin) / xGap * dateGap))
+            );
             date.appendChild(text);
 
             date.setAttribute("x", absPos[i]);
@@ -142,8 +146,8 @@ function createGraph() {
         /* For each data add to the graph */
         var points = "";        
         data.forEach(point => {
-            var x = xMin + ((point.year - dateMin) / dateGap * (xMax - xMin));
-            var y = yMin + ((point.population - populationMin) / populationGap * (yMax - yMin));
+            var x = xMin + ((point.year - dateMin) / dateGap * xGap);
+            var y = yMin + ((point.population - populationMin) / populationGap * yGap);
             points += x + "," + y + " ";
 
             /* Circle */
