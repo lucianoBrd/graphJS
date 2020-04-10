@@ -129,4 +129,9 @@ polyline {
     display: block;
     margin: 0.4em auto;
   }
+
+  .graph {
+    height: 400px;
+    width: 300px;
+  }
 }
