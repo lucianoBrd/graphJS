@@ -1,5 +1,6 @@
 body {
   font-family: 'Open Sans', sans-serif;
+  background-color: #f9f7f7;
 }
 
 #container {
@@ -25,7 +26,7 @@ body {
 }
 
 .graph .grid {
-  stroke: #ccc;
+  stroke: #dbe2ef;
   stroke-dasharray: 0;
   stroke-width: 1;
 }
@@ -38,12 +39,34 @@ body {
   font-weight: bold;
   text-transform: uppercase;
   font-size: 11px;
-  fill: black;
+  fill: #112d4e;
+}
+
+.label-data {
+  font-weight: lighter;
+  font-size: 14px;
+  fill: #112d4e;
 }
 
 .data {
-  fill: red;
+  fill: #dbe2ef;
   stroke-width: 1;
+}
+
+.data-hover {
+  fill: #112d4e;
+}
+
+polyline {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dash 4s linear forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .bouncy {
@@ -84,21 +107,21 @@ body {
 .button {
   display: inline-block;
   padding: 0.35em 1.2em;
-  border: 0.1em solid #0074d9;
+  border: 0.1em solid #3f72af;
   margin: 0 0.3em 0.3em 0;
   border-radius: 0.12em;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  color: #0074d9;
+  color: #3f72af;
   text-align: center;
   transition: all 0.2s;
 }
 
 .button:hover {
-  color: #FFFF;
-  background-color: #0074d9;
+  color: #f9f7f7;
+  background-color: #3f72af;
 }
 
 @media all and (max-width:30em) {

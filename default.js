@@ -12,13 +12,6 @@ function createGraph() {
     svg.setAttribute("id", "svg");
     svg.setAttribute("version", 1.2);
 
-    /* Title */
-    var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-    title.setAttribute("id", "title");
-    /* Texte */
-    var t = document.createTextNode("Données démographiques de France");
-    title.appendChild(t);
-
     /* GridX */
     var gridX = document.createElementNS("http://www.w3.org/2000/svg", "g");
     gridX.setAttribute("id", "xGrid");
@@ -72,16 +65,21 @@ function createGraph() {
     /* Polyline */
     var polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
     polyline.setAttribute("fill", "none");
-    polyline.setAttribute("stroke", "#0074d9");
+    polyline.setAttribute("stroke", "#3f72af");
     polyline.setAttribute("stroke-width", 2);
 
+    /* DataSet */
+    var dataSet = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    dataSet.setAttribute("class", "data");
+    dataSet.setAttribute("data-setname", "Point démographiques");
+
     /* Add elements to SVG */
+    svg.appendChild(dataSet);
     svg.appendChild(polyline);
     svg.appendChild(yLabel);
     svg.appendChild(xLabel);
     svg.appendChild(gridY);
     svg.appendChild(gridX);
-    svg.appendChild(title);
 
     /* Get the data JSON */
     fetch('./data.json').then(function (response) {
@@ -142,11 +140,43 @@ function createGraph() {
 
 
         /* For each data add to the graph */
-        var points = "";
+        var points = "";        
         data.forEach(point => {
             var x = xMin + ((point.year - dateMin) / dateGap * (xMax - xMin));
             var y = yMin + ((point.population - populationMin) / populationGap * (yMax - yMin));
             points += x + "," + y + " ";
+
+            /* Circle */
+            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", x);
+            circle.setAttribute("cy", y);
+            circle.setAttribute("r", 4);
+            circle.setAttribute("data-value", point.population);
+            circle.setAttribute("data-date", point.year);
+            dataSet.appendChild(circle);
+
+            /* Text */
+            var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x + 10);
+            text.setAttribute("y", !sort ? y + 10 : y - 10);
+            text.setAttribute("class", "label-data");
+            text.setAttribute("visibility", "hidden");
+            /* Texte */
+            var t = document.createTextNode(point.population + "," + point.year);
+            text.appendChild(t);
+            dataSet.appendChild(text);
+
+            /* Add event */
+            circle.addEventListener("mouseover", function(){
+                this.classList.add("data-hover");
+                this.setAttribute("r", 7);
+                text.setAttribute("visibility", "visible");
+            });
+            circle.addEventListener("mouseout", function(){
+                this.classList.remove("data-hover");
+                this.setAttribute("r", 4);
+                text.setAttribute("visibility", "hidden");
+            });
 
         });
 
